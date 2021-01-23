@@ -1,0 +1,152 @@
+#!/usr/bin/env python3
+
+import midiutil
+import musictheory
+import re
+import sys
+import traceback
+
+def midinote(keymode,noteregister):
+    scale=musictheory.scale(keymode)
+    note,register=noteregister.split('/')
+    register=int(register)
+    root=(register+1)*12
+    try:
+        r=root+scale.note(note)
+        print(r,end=' ')
+        return r
+    except TypeError as e:
+        import pdb;pdb.set_trace()
+
+def liststrip(a,b):
+    while True:
+        try:
+            a.remove(b)
+        except ValueError:
+            break
+
+def main():
+    #egrep ^notes /var/www/html/rs/vex/embed/deck.html |sed -e 's/\^4^//g' >> deck-the-halls
+    vex='''
+notes :8 B@/2-E/3-E/3-A@/2| G/2-E/3-F/2-B/3| E/2-E/3-F/2-B/3| G/2-E/3-E/2-E/3
+notes :8 F-G-A-F/2 | G/2-E/3-E/3-F/2 | E/2-E/3-F/2-B/3 | G/2-E/3-E/3-E/2  =:| E/2-E/3:4(E/2.E/3) =||
+notes :8 F/2-B/3-B/3-G/2|A/2-B/3-F/2-B/3|G/2-E/3-E/3-A/2|B/2-E/3-F/2-B/3|G/2-An/2-:4:B/2
+notes :8 C/3-D/2-:4:E@/2|:8 D/2-B/3-C/3-F/3|B/2-B/3-B/3-B/2|B/2-E/3-E/3-A/2|G/2-E/3-F/2-B/3
+notes :8 E/2-E/3-F/2-B/3|G/2-E/3-E/2-E/3|F/2-G/2-A/2-F/2|G/2-E/3-E/3-F/2|E/2-E/3-D/2-B/3|E/2-E/3:4(E/2.E/3) =|=
+    '''
+
+    song=[]
+    for line in vex.splitlines():
+        use=line[len('notes '):]
+        use.replace(' ','')
+        song.extend(re.split(r'(=\|=|=\|\||=:\||\|)',use))
+    t=list(filter(lambda k:k,song))
+    liststrip(t,'=|=')
+    liststrip(t,'|')
+    print(len(t),t)
+    repeat=0
+    while True: #expand repeats
+        try:
+            k=t.index('=:|',repeat)
+            repeat=k+1
+            t.pop(k)
+            r=t[0:k+1]
+            r1=r[0:k]
+            r.pop(k-1)
+            r1.extend(r)
+            k2=t.index('=||',repeat)
+            r1.extend(t[k2+1:])
+            t=r1
+            '''
+            in theory we'd index from start of repeat, default to 0 (start of song)
+            we'd also extend repeat til end of section? or is one bar the norm?
+            '''
+        except ValueError:
+            break
+    print(len(t),t)
+    song=[]
+    offset=0
+    for barno,bar in enumerate(t):
+        duration=1/4
+        song.append(bar.split('-'))
+        octave=song[-1][-1].split('/')[1][0]
+        print('#',song[-1],end=' ')
+        def setkey(key):
+            def setnoteL(no):
+                return midinote(key,no)
+            return setnoteL
+        mn=setkey('Cm')
+        for i,note in enumerate(song[-1]):
+            if isinstance(song[-1][i],tuple):
+                pass #these notes inserted already
+            else:
+                try:
+                    if '/' not in note:
+                        song[-1][i]+='/'+octave
+                    song[-1][i]=song[-1][i].strip(' ') #assume last note has it.  hack!
+                    if ':' in note: #duration deviation
+                        if note[0]==':':
+                            duration=1/int(note[1])
+                            song[-1][i]=(mn(song[-1][i][2:].strip(' :\t')),duration,offset)
+                        else:
+    #technically these appends are blind
+    # if we hit ":8 X/Y :4(A/B.C/D)" we'll
+    # have an empty slot between X and A
+    #- this is the issue with an incomplete lex/parser
+    #same goes for shifting offset
+                            l,r=song[-1][i].split(':')
+                            song[-1][i]=(mn(l),duration,offset)
+                            duration=1/int(r[0])
+                            if r[1]=='(' and r[-1]==')':
+                                chord=r[2:-1].split('.')
+                                for chordnote in chord:
+                                    song[-1].append((mn(chordnote),duration/len(chord),offset+1))
+                                    offset+=1
+                                i+=len(chord)
+                            else:
+                                song[-1].append(mn(r[1:]),duration,offset+1)
+                    else:
+                        song[-1][i]=(mn(song[-1][i]),duration,offset)
+                except (TypeError,ValueError) as e:
+                    print('dafu',sys.exc_info()[0:2],traceback.format_exc(),'__')
+                    import pdb;pdb.set_trace()
+            offset+=1
+        print()
+
+    linear=[]
+    for bar in song:
+        linear.extend(bar)
+    #linear.append((midinote('Cm','C/5'),1,len(linear)))
+    print(linear)
+
+    if True:
+        mf=midiutil.MIDIFile(1,deinterleave=True)
+        mf.addTempo(0,0,240)
+        for (note,duration,offset) in linear:
+            mf.addNote(0,0,note,offset,duration*8,64)
+        with open('weirddeck.mid','wb') as emit:
+            mf.writeFile(emit)
+    else:
+        from pprint import pprint as ddx
+        ddx(linear)
+
+if __name__=='__main__':
+    main()
+'''
+['B@/2-E/3-E/3-A@/2', ' G/2-E/3-F/2-B/3', ' E/2-E/3-F/2-B/3', ' G/2-E/3-E/2-E/3', 'F-G-A-F/2 ', ' G/2-E/3-E/3-F/2 ', ' E/2-E/3-F/2-B/3 ', ' G/2-E/3-E/3-E/2  ', '=:|', ' E/2-E/3:4(E/3.E/2) ', '=||', 'F/2-B/3-B/3-G/2', 'A/2-B/3-F/2-B/3', 'G/2-E/3-E/3-A/2', 'B/2-E/3-F/2-B/3', 'G/2-An/2-:4:B/2', 'C/3-D/2-:4:E@/2', ':8 D/2-B/3-C/3-F/3', 'B/2-B/3-B/3-B/2', 'B/2-E/3-E/3-A/2', 'G/2-E/3-F/2-B/3', 'E/2-E/3-F/2-B/3', 'G/2-E/3-E/2-E/3', 'F/2-G/2-A/2-F/2', 'G/2-E/3-E/3-F/2', 'E/2-E/3-D/2-B/3', 'E/2-E/3:4(E/2.E/3) '] 27
+'''
+
+'''
+<score lang="ABC">
+X:1
+T:The Legacy Jig
+M:6/8
+L:1/8
+R:jig
+K:G
+GFG BAB | gfg gab | GFG BAB | d2A AFD |
+GFG BAB | gfg gab | age edB |1 dBA AFD :|2 dBA ABd |:
+efe edB | dBA ABd | efe edB | gdB ABd |
+efe edB | d2d def | gfe edB |1 dBA ABd :|2 dBA AFD |]
+</score>
+'''

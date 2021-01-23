@@ -1,0 +1,89 @@
+--MAJOR
+CbM     Cb Db Eb Fb Gb Ab Bb 
+CM      C  D  E  F  G  A  B
+C#M     C# D# E# F# G# A# B# 
+DbM     Db Eb F  Gb Ab Bb C  
+DM      D  E  F# G  A  B  C# 
+D#M     D# E# F## G# A# B# C##      ->  EbM
+EbM     Eb F  G  Ab Bb C  D  
+EM      E  F# G# A  B  C# D# 
+E#M     E# F## G## A# B# C## D##    ->  FM
+FbM     Fb Gb Ab Bbb Cb Db Eb       ->  EM
+FM      F  G  A  Bb C  D  E  
+F#M     F# G# A# B C# D# E#         ->  GbM
+GbM     Gb Ab Bb Cb Db Eb F 
+GM      G  A  B  C  D  E  F#
+G#M     G# A# B# C# D# E# F##       ->  AbM
+AbM     Ab Bb C  Db Eb F  G  
+AM      A  B  C# D  E  F# G#
+A#M     A# B# C## D# E# F## G##     ->  BbM
+BbM     Bb C  D  Eb F  G  A  
+BM      B  C# D# E  F# G# A# 
+B#M     B# C## D## E# F## G## A##   ->  CM
+--MINOR
+Cbm     Cb Db Ebb Fb Gb Abb Bbb     ->  C#h
+Cm      C  D  Eb F  G  Ab Bb
+C#m     C# D# E  F# G# A  B  
+Dbm     Db Eb Fb Gb Ab Bbb Cb       ->  C#m
+Dm      D  E  F  G  A  Bb C  
+D#m     D# E# F# G# A# B  C# 
+Ebm     Eb F  Gb Ab Bb Cb Db 
+Em      E  F# G  A  B  C  D  
+E#m     E# F## G# A# B# C# D#       ->  Fm
+Fbm     Fb Gb Abb Bbb Cb Dbb Ebb    ->  Em
+Fm      F  G  Ab Bb C  Db Eb 
+F#m     F# G# A  B  C# D  E  
+Gbm     Gb Ab Bbb Cb Db Ebb Fb      ->  F#m
+Gm      G  A  Bb C  D  Eb F 
+G#m     G# A# B  C# D# E  F#
+Abm     Ab Bb Cb Db Eb Fb Gb
+Am      A  B  C  D  E  F  G 
+A#m     A# B# C# D# E# F# G#
+Bbm     Bb C  Db Eb F  Gb Ab
+Bm      B  C# D  E  F# G  A  
+B#m     B# C## D# E# F## G# A#      ->  Cm
+--MINOR HARMONIC
+Cbh     Cb	Db	Ebb	Fb	Gb	Abb	Bb	Cb
+Ch      C  D  Eb F  G  Ab B
+C#h     C# D# E  F# G# A  B# ------
+C#h     C#	D#	E	F#	G#	A	B#
+Dbh     Db	Eb	Fb	Gb	Ab	Bbb	C
+Dh      D	E	F	G	A	Bb	C#
+D#h     D#	E#	F#	G#	A#	B	C##
+Ebh     Eb	F	Gb	Ab	Bb	Cb	D	
+Eh      E	F#	G	A	B	C	D#	
+E#h     E#	F##	G#	A#	B#	C#	D##
+Fbh     Fb	Gb	Abb	Bbb	Cb	Dbb	Eb
+Fh      F	G	Ab	Bb	C	Db	E
+F#h     F#	G#	A	B	C#	D	E#
+Gbh     Gb	Ab	Bbb	Cb	Db	Ebb	F
+Gh      G	A	Bb	C	D	Eb	F#
+G#h     G#	A#	B	C#	D#	E	F##
+Abh     Ab	Bb	Cb	Db	Eb	Fb	G
+Ah      A	B	C	D	E	F	G#
+A#h     A#	B#	C#	D#	E#	F#	G##
+Bbh     Bb	C	Db	Eb	F	Gb	A
+Bh      B	C#	D	E	F#	G	A#
+B#h     B#	C##	D#	E#	F##	G#	A##
+--MINOR MELODIC
+Cbl 	Cb	Db	Ebb	Fb	Gb	Ab	Bb
+Cl  	C	D	Eb	F	G	A	B
+C#l 	C#	D#	E	F#	G#	A#	B#
+Dbl 	Db	Eb	Fb	Gb	Ab	Bb	C
+Dl  	D	E	F	G	A	B	C#
+D#l 	D#	E#	F#	G#	A#	B#	C##
+Ebl 	Eb	F	Gb	Ab	Bb	C	D
+El  	E	F#	G	A	B	C#	D#
+E#l 	E#	F##	G#	A#	B#	C##	D##
+Fbl 	Fb	Gb	Abb	Bbb	Cb	Db	Eb
+Fl  	F	G	Ab	Bb	C	D	E
+F#l 	F#	G#	A	B	C#	D#	E#
+Gbl 	Gb	Ab	Bbb	Cb	Db	Eb	F
+Gl  	G	A	Bb	C	D	E	F#
+G#l 	G#	A#	B	C#	D#	E#	F##
+Abl 	Ab	Bb	Cb	Db	Eb	F	G
+Al  	A	B	C	D	E	F#	G#
+A#l 	A#	B#	C#	D#	E#	F##	G##
+Bbl 	Bb	C	Db	Eb	F	G	A
+Bl  	B	C#	D	E	F#	G#	A#
+B#l 	B#	C##	D#	E#	F##	G##	A##
